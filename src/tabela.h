@@ -1,4 +1,4 @@
-#define MAX_TAM 100
+#define MAX_TAM 101 // Números primos tendem a diminuir colisões na tabela Hash
 #define MAX_STR 100
 
 typedef struct Livro {
@@ -7,7 +7,7 @@ typedef struct Livro {
     char autor[MAX_STR];
     int ano;
     int copias;
-    int totalEmprestimos;
+    int ativo; //1 = ativo
     struct Livro* prox; 
 } Livro;
  
@@ -15,6 +15,7 @@ typedef struct Usuario {
     int id;
     char nome[MAX_STR];
     char email[MAX_STR];
+    int ativo;
     struct Usuario* prox;
 } Usuario;
  
