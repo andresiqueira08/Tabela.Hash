@@ -3,11 +3,56 @@
 #include <string.h>
 #include "tabela.h"
 #include "arquivo.h"
+void atualizarLivroNaHash(Livro* livro) {
+    if (livro == NULL) {
+        printf("Erro: Livro inválido.\n");
+        return;
+    }
 
+    int chave = hashLivro(livro->isbn);
+    Livro* buscando = tabelaLivros[chave];
+
+    while (buscando != NULL) {
+        if (strcmp(buscando->isbn, livro->isbn) == 0) {
+            // Atualiza os campos com os novos valores
+            strcpy(buscando->titulo, livro->titulo);
+            strcpy(buscando->autor, livro->autor);
+            buscando->ano = livro->ano;
+            buscando->copias = livro->copias;
+            printf("Livro ISBN %s atualizado na tabela hash.\n", livro->isbn);
+            return;
+        }
+        buscando = buscando->prox;
+    }
+
+    printf("Livro com ISBN %s não encontrado na tabela hash.\n", livro->isbn);
+}
+void atualizarUsuarioNaHash(Usuario* usuario) {
+    if (usuario == NULL) {
+        printf("Erro: Usuário inválido.\n");
+        return;
+    }
+
+    int chave = hashUsuario(usuario->id);
+    Usuario* buscando = tabelaUsuarios[chave];
+
+    while (buscando != NULL) {
+        if (buscando->id == usuario->id) {
+            // Atualiza os campos com os novos valores
+            strcpy(buscando->nome, usuario->nome);
+            strcpy(buscando->email, usuario->email);
+            printf("Usuário ID %d atualizado na tabela hash.\n", usuario->id);
+            return;
+        }
+        buscando = buscando->prox;
+    }
+
+    printf("Usuário com ID %d não encontrado na tabela hash.\n", usuario->id);
+}
 void salvarLivro(Livro* livro) {
-    FILE* f = fopen("../dados/livros.dat", "ab"); // a = adicionar, b = binário
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "ab"); // a = adicionar, b = binário
     if (f == NULL) {
-        printf("Erro ao abrir usuarios.dat\n");
+        printf("Erro ao abrir livros.dat\n");
         return;
     }
 
@@ -16,7 +61,7 @@ void salvarLivro(Livro* livro) {
 }
 
 void salvarUsuario(Usuario* usuario) {
-    FILE* f = fopen("../dados/usuarios.dat", "ab"); 
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "ab"); 
     if (f == NULL) {
         printf("Erro ao abrir usuarios.dat\n");
         return;
@@ -27,7 +72,7 @@ void salvarUsuario(Usuario* usuario) {
 }
 // Funções para carregar os dados do arquivo binário de volta para a tabela hash quando o programa inicia.
 void carregarLivros() {
-    FILE* f = fopen("../dados/livros.dat", "rb");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "rb");
     if (f == NULL) {
         printf("Nenhum livro cadastrado.\n");
         return;
@@ -45,7 +90,7 @@ void carregarLivros() {
 
 
 void carregarUsuarios() {
-    FILE* f = fopen("../dados/usuarios.dat", "rb"); 
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "rb"); 
     if (f == NULL) {
         printf("Nenhum usuário cadastrado.\n");
         return;
@@ -54,15 +99,61 @@ void carregarUsuarios() {
     Usuario usuario;
    while (fread(&usuario, sizeof(Livro), 1, f)) {
         if (usuario.ativo) {  // <- Só carrega se estiver ativo
-            Usuario* novoUsuario = criarusuario(usuario.id, usuario.nome, usuario.email);
+            Usuario* novoUsuario = criarUsuario(usuario.id, usuario.nome, usuario.email);
             inserirUsuario(novoUsuario);
         }
     }
     fclose(f);
 }
+void removerUsuarioDaHash(int id) {
+    int chave = hashUsuario(id);
+    Usuario* atual = tabelaUsuarios[chave];
+    Usuario* anterior = NULL;
+
+    while (atual != NULL) {
+        if (atual->id == id) {
+            // Remove o usuário da lista encadeada
+            if (anterior == NULL) {
+                tabelaUsuarios[chave] = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+            free(atual);
+            printf("Usuário ID %d removido da tabela hash.\n", id);
+            return;
+        }
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    printf("Usuário com ID %d não encontrado na tabela hash.\n", id);
+}
+void removerLivroDaHash(const char* isbn) {
+    int chave = hashLivro(isbn);
+    Livro* atual = tabelaLivros[chave];
+    Livro* anterior = NULL;
+
+    while (atual != NULL) {
+        if (strcmp(atual->isbn, isbn) == 0) {
+            // Remove o livro da lista encadeada
+            if (anterior == NULL) {
+                tabelaLivros[chave] = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+            free(atual);
+            printf("Livro ISBN %s removido da tabela hash.\n", isbn);
+            return;
+        }
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    printf("Livro com ISBN %s não encontrado na tabela hash.\n", isbn);
+}
 //Algoritmo que remove os livro e os usuários de maneira lógica, sem apagá-los fisicamente
 void removerLivro(const char* isbnAlvo) {
-    FILE* f = fopen("../dados/livros.dat", "rb+"); //r = leitura, + = leitura e escrita
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "rb+"); //r = leitura, + = leitura e escrita
     if (f == NULL) {
         printf("Erro ao abrir livros.dat\n");
         return;
@@ -87,7 +178,7 @@ void removerLivro(const char* isbnAlvo) {
     fclose(f);
 }
 void removerUsuario(int idAlvo) {
-    FILE* f = fopen("../dados/usuarios.dat", "rb+");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "rb+");
     if (f == NULL) {
         printf("Erro ao abrir usuarios.dat\n");
         return;
@@ -112,7 +203,7 @@ void removerUsuario(int idAlvo) {
     fclose(f);
 }
 void atualizarLivro(const char* isbnAlvo) {
-    FILE* f = fopen("livros.dat", "rb+");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "rb+");
     if (f == NULL) {
         printf("Erro ao abrir livros.dat\n");
         return;
@@ -154,7 +245,7 @@ void atualizarLivro(const char* isbnAlvo) {
     fclose(f);
 }
 void atualizarUsuario(int idAlvo) {
-    FILE* f = fopen("usuarios.dat", "rb+");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "rb+");
     if (f == NULL) {
         printf("Erro ao abrir usuarios.dat\n");
         return;

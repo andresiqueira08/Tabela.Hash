@@ -14,8 +14,8 @@ void iniciarTabelas() {
 //"const" para declarar char como constante, ou seja, para seu valor original não ser alterado
 int hashLivro(const char* isbn) {
     int soma = 0;
-    for (int i = 0; isbn[i] != '\0'; i++) {
-        soma += isbn[i];
+    for (int x = 0; isbn[x] != '\0'; x++) {
+        soma += isbn[x];
     }
     return soma % MAX_TAM;
 }
@@ -27,28 +27,28 @@ int hashUsuario(int id) {
 Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int ano, int copias){
     Livro* novo = (Livro*)malloc(sizeof(Livro));
     //Definir isbn
-    int i = 0;
-    while (isbn[i] != '\0' && i < MAX_STR - 1) {
-        novo->isbn[i] = isbn[i];
-        i++;
+    int y = 0;
+    while (isbn[y] != '\0' && y < MAX_STR - 1) {
+        novo->isbn[y] = isbn[y];
+        y++;
     }
-    novo->isbn[i] = '\0';
+    novo->isbn[y] = '\0';
 
     //Definir título
-    i = 0;
-    while (titulo[i] != '\0' && i < MAX_STR - 1) {
-        novo->titulo[i] = titulo[i];
-        i++;
+    int z = 0;
+    while (titulo[z] != '\0' && z < MAX_STR - 1) {
+        novo->titulo[z] = titulo[z];
+        z++;
     }
-    novo->titulo[i] = '\0';
+    novo->titulo[z] = '\0';
 
     //Definir autor
-    i = 0;
-    while (autor[i] != '\0' && i < MAX_STR - 1) {
-        novo->autor[i] = autor[i];
-        i++;
+    int j = 0;
+    while (autor[j] != '\0' && j < MAX_STR - 1) {
+        novo->autor[j] = autor[j];
+        j++;
     }
-    novo->autor[i] = '\0';
+    novo->autor[j] = '\0';
 
     novo -> ano = ano;
     novo -> copias = copias;
@@ -60,18 +60,19 @@ Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int a
 Usuario* criarUsuario(int id, const char* nome, const char* email){
     Usuario* novo = (Usuario*)malloc(sizeof(Usuario));
     novo -> id = id;
-    int i = 0;
-    while(nome[i] != '\0' && i < MAX_STR - 1){
-        novo ->nome[i] = nome[i];
-        i++;
+    int index = 0;
+    while(nome[index] != '\0' && index < MAX_STR - 1){
+        novo ->nome[index] = nome[index];
+        index++;
     }
-    novo -> nome[i] = '\0';
-    int i = 0;
-    while(email[i] != '\0' && i < MAX_STR - 1){
-        novo ->email[i] = email[i];
-        i++;
+    novo -> nome[index] = '\0';
+
+    int a = 0;
+    while(email[a] != '\0' && a < MAX_STR - 1){
+        novo ->email[a] = email[a];
+        a++;
     }
-    novo -> email[i] = '\0';
+    novo -> email[a] = '\0';
     novo -> prox = NULL;
     return novo; 
 }
@@ -79,9 +80,9 @@ Usuario* criarUsuario(int id, const char* nome, const char* email){
 //Funções para inserir Livro e Usuário na tabela, solucionando colisões
 
 void inserirLivro(Livro* livro){
-    int i = hashLivro(livro->isbn); // Posição na tabela
-    livro -> prox = tabelaLivros[i]; // O novo livro aponta para o primeiro da lista
-    tabelaLivros[i] = livro; // Insere o livro na frente da lista
+    int p = hashLivro(livro->isbn); // Posição na tabela
+    livro -> prox = tabelaLivros[p]; // O novo livro aponta para o primeiro da lista
+    tabelaLivros[p] = livro; // Insere o livro na frente da lista
 }
 
 void inserirUsuario(Usuario* usuario){

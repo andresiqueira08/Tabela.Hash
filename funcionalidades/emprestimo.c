@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "emprestimo.h"
+#include "consulta.h"
+#include <time.h>
+
 
 void realizarEmprestimo(const char* isbn, int id, const char* data){
     Livro* livro = buscarLivroPorISBN(isbn);
@@ -41,7 +44,7 @@ void realizarEmprestimo(const char* isbn, int id, const char* data){
 
     emp.devolvido = 0;
 
-    FILE* f = fopen("dados/emprestimos.dat", "ab");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\emprestimos.dat", "ab");
     if (f == NULL) {
         printf("Erro ao abrir arquivo de empréstimos.\n");
         return;
@@ -51,4 +54,23 @@ void realizarEmprestimo(const char* isbn, int id, const char* data){
 
     printf("Empréstimo realizado!\n");
 
+}
+
+void registrarLogEmprestimo(Usuario *usuario, Livro *livro) {
+    FILE *log = fopen("dados/emprestimos.log", "a");
+    if (!log) {
+        printf("Erro ao abrir o log de empréstimos.\n");
+        return;
+    }
+
+    time_t agora = time(NULL);
+    struct tm *t = localtime(&agora);
+
+    fprintf(log, "[%02d/%02d/%d %02d:%02d] ID: %d - Nome: %s - ISBN: %s - Título: %s\n",
+        t->tm_mday, t->tm_mon + 1, t->tm_year + 1900,
+        t->tm_hour, t->tm_min,
+        usuario->id, usuario->nome,
+        livro->isbn, livro->titulo);
+
+    fclose(log);
 }

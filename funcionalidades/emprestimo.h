@@ -12,5 +12,6 @@ typedef struct Emprestimo {
 } Emprestimo;
 
 void realizarEmprestimo(const char* isbn, int idUsuario, const char* data);
+void registrarLogEmprestimo(Usuario *usuario, Livro *livro);
 
 #endif

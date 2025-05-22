@@ -1,11 +1,13 @@
 #include "historicoEmprestimo.h"
 #include "../src/tabela.h"
+#include "../src/arquivo.h"
 #include <time.h> // Biblioteca auxiliar para calcular multa
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 void registrarHistorico(HistoricoEmprestimo* historico) {
-    FILE* f = fopen("../dados/historico_emprestimos.dat", "ab");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\historicoEmprestimo.dat", "ab");
     if (f==NULL){
         printf("Erro ao abrir o arquivo de histórico!\n");
         return;
@@ -15,7 +17,7 @@ void registrarHistorico(HistoricoEmprestimo* historico) {
 }
 
 void mostrarHistorico() {
-    FILE* f = fopen("../dados/historico_emprestimos.dat", "rb");
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\historicoEmprestimo.dat", "rb");
     if (!f) {
         printf("Erro ao abrir o arquivo de histórico!\n");
         return;
@@ -30,7 +32,16 @@ void mostrarHistorico() {
 
     fclose(f);
 }
-
+// cálculo da multa (R$2 por dia de atraso)
+float calcularMulta(int diasAtraso) {
+    float valorPorDia = 2.00;
+    if (diasAtraso > 0) {
+        return (float)diasAtraso * valorPorDia;
+    } 
+    else {
+        return 0.0;
+    }
+}
 void registrarDevolucao(int idUsuario, char* isbn, char* dataEmprestimo, int diasAtraso) {
     HistoricoEmprestimo historico;
 
@@ -48,7 +59,7 @@ void registrarDevolucao(int idUsuario, char* isbn, char* dataEmprestimo, int dia
 }
 
 void atualizarCopiasLivro(const char* isbn, int delta) {
-    FILE* f = fopen("dados/livros.dat", "r+b"); // leitura + escrita binária
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "r+b"); // leitura + escrita binária
     if (!f) {
         printf("Erro ao abrir livros.dat para atualização.\n");
         return;
@@ -76,32 +87,5 @@ void obterDataAtual(char* buffer, int tamanho) {
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     snprintf(buffer, tamanho, "%02d/%02d/%04d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-}
-
-// cálculo da multa (R$2 por dia de atraso)
-float calcularMulta(int diasAtraso) {
-    float valorPorDia = 2.00;
-    if (diasAtraso > 0) {
-        return diasAtraso * valorPorDia;
-    } 
-    else {
-        return 0.0;
-    }
-}
-
-// Função principal para registrar a devolução no histórico
-void registrarDevolucao(int idUsuario, char* isbn, char* dataEmprestimo, int diasAtraso) {
-    HistoricoEmprestimo historico;
-
-    historico.idUsuario = idUsuario;
-    strcpy(historico.isbn, isbn);
-    strcpy(historico.dataEmprestimo, dataEmprestimo);
-
-    obterDataAtual(historico.dataDevolucao, sizeof(historico.dataDevolucao));
-    historico.multa = calcularMulta(diasAtraso);
-
-    registrarHistorico(&historico);
-
-    printf("Devolução registrada com sucesso!\n");
-    printf("Data: %s | Multa: R$ %.2f\n", historico.dataDevolucao, historico.multa);
+    return;
 }
