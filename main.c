@@ -9,7 +9,7 @@
 #include "funcionalidades/consulta.h"
 #include "funcionalidades/relatorios.h"
 #include "funcionalidades/interfaceInterativa.h"
-
+//Adição de tudo que foi trabalhado
 int main() {
     iniciarTabelas();  // Inicializa tabelas hash
     carregarLivros();  // Carrega livros do arquivo
