@@ -40,16 +40,10 @@ Livro* buscarLivroPorTitulo(const char* titulo){
     }
 }
 Usuario* buscarUsuarioPorID(int id){
-    int chave = hashUsuario(id);
-    Usuario* buscando = tabelaUsuarios[chave];
-    while(buscando != NULL){
-        if(buscando->id == id){
-            return buscando;
-        }
-        buscando = buscando -> prox;
-    }
-    return NULL;
+    return tabelaUsuarios[id];
 }
+
+
 
 Usuario* buscarUsuarioPorNome(const char* nome) {
     for (int i = 0; i < MAX_TAM; i++) {

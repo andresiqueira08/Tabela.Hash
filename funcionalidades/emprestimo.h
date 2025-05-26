@@ -11,7 +11,10 @@ typedef struct Emprestimo {
     float multa;
 } Emprestimo;
 
+
+void atualizarLivroNoArquivo(const char* isbn, int novaQtdeCopias);
 void realizarEmprestimo(const char* isbn, int idUsuario, const char* data);
 void registrarLogEmprestimo(Usuario *usuario, Livro *livro);
 
 #endif
+

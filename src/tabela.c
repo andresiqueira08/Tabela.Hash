@@ -21,7 +21,7 @@ int hashLivro(const char* isbn) {
 }
 
 int hashUsuario(int id) {
-    return id % MAX_TAM;
+    return id; //A chave da tabela hash de usuario deve ser o próprio id
 }
 
 Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int ano, int copias){
@@ -57,7 +57,7 @@ Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int a
 }
 
 
-Usuario* criarUsuario(int id, const char* nome, const char* email){
+Usuario* criarUsuario(int id, const char* nome, const char* email, const char* telefone){
     Usuario* novo = (Usuario*)malloc(sizeof(Usuario));
     novo -> id = id;
     int index = 0;
@@ -66,7 +66,13 @@ Usuario* criarUsuario(int id, const char* nome, const char* email){
         index++;
     }
     novo -> nome[index] = '\0';
-
+    
+    int u = 0;
+    while(telefone[u] != '\0' && u < 15 - 1){
+        novo ->telefone[u] = telefone[u];
+        u++;
+    }
+    novo -> telefone[u] = '\0';
     int a = 0;
     while(email[a] != '\0' && a < MAX_STR - 1){
         novo ->email[a] = email[a];
@@ -85,8 +91,8 @@ void inserirLivro(Livro* livro){
     tabelaLivros[p] = livro; // Insere o livro na frente da lista
 }
 
-void inserirUsuario(Usuario* usuario){
-    int i = hashUsuario(usuario -> id);
-    usuario -> prox = tabelaUsuarios[i];
+void inserirUsuario(Usuario* usuario) {
+    int i = usuario->id % MAX_TAM;  // Garante que o ID esteja dentro do tamanho da tabela
+    usuario->prox = tabelaUsuarios[i];  // Usa o próprio ID como índice
     tabelaUsuarios[i] = usuario;
 }

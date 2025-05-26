@@ -3,6 +3,7 @@
 #include "../src/arquivo.h"
 #include "../src/tabela.h"
 #include "historicoEmprestimo.h"
+
 int contarLivros() {
     FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "rb");
     if (!f) return 0; // Se o arquivo não existir, retorna 0
@@ -74,10 +75,10 @@ void usuariosMaisAtivos() {
         printf("ID %d - %s (%d empréstimos)\n", usuarios[i].id, usuarios[i].nome, usuarios[i].emprestimos);
     }
 }
-
 void exibirHistoricoEmprestimos() {
-    printf("\n--- Histórico de empréstimos ---\n");
-    FILE *log = fopen("dados/emprestimos.log", "r");
+    printf("\n--- Histórico de Empréstimos ---\n");
+
+    FILE *log = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\emprestimos.log", "r");
     if (!log) {
         printf("Nenhum empréstimo registrado.\n");
         return;
@@ -87,5 +88,6 @@ void exibirHistoricoEmprestimos() {
     while (fgets(linha, sizeof(linha), log)) {
         printf("%s", linha);
     }
+
     fclose(log);
 }

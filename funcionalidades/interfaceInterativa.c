@@ -29,7 +29,7 @@ void exibirMenu() {
 
 void interfaceInterativa() {
     int opcao;
-    char isbn[MAX_STR], titulo[MAX_STR], autor[MAX_STR], nome[MAX_STR], email[MAX_STR], dataEmprestimo[11];
+    char isbn[MAX_STR], titulo[MAX_STR], autor[MAX_STR], nome[MAX_STR], email[MAX_STR], dataEmprestimo[11], telefone[15];
     int id, ano, copias, diasAtraso;
 
     while (1) {
@@ -75,7 +75,11 @@ void interfaceInterativa() {
                 fgets(email, MAX_STR, stdin);
                 strtok(email, "\n");
 
-                Usuario* novoUsuario = criarUsuario(id, nome, email);
+                printf("Telefone: ");
+                fgets(telefone, 11, stdin);
+                strtok(telefone, "\n");
+
+                Usuario* novoUsuario = criarUsuario(id, nome, email, telefone);
                 inserirUsuario(novoUsuario);
                 salvarUsuario(novoUsuario);
                 printf("Usuário cadastrado com sucesso!\n");

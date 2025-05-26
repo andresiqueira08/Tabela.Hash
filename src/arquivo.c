@@ -90,17 +90,22 @@ void carregarLivros() {
 
 
 void carregarUsuarios() {
-    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "rb"); 
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "rb");
     if (f == NULL) {
         printf("Nenhum usuário cadastrado.\n");
         return;
     }
 
     Usuario usuario;
-   while (fread(&usuario, sizeof(Livro), 1, f)) {
-        if (usuario.ativo) {  // <- Só carrega se estiver ativo
-            Usuario* novoUsuario = criarUsuario(usuario.id, usuario.nome, usuario.email);
-            inserirUsuario(novoUsuario);
+    while (fread(&usuario, sizeof(Usuario), 1, f)) { 
+        if (usuario.ativo) {  
+            Usuario* novoUsuario = criarUsuario(usuario.id, usuario.nome, usuario.email, usuario.telefone);
+            
+            if (novoUsuario != NULL) { 
+                inserirUsuario(novoUsuario);
+            } else {
+                printf("Erro ao criar usuário: ID %d\n", usuario.id);
+            }
         }
     }
     fclose(f);

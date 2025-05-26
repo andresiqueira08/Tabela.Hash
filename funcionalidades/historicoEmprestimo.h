@@ -11,12 +11,12 @@ typedef struct {
     float multa;              
 } HistoricoEmprestimo;
 
-void registrarHistorico(HistoricoEmprestimo* historico);
 void mostrarHistorico();
 void atualizarCopiasLivro(const char* isbn, int delta);
 void registrarDevolucao(int idUsuario, char* isbn, char* dataEmprestimo, int diasAtraso);
 void obterDataAtual(char* buffer, int tamanho);
 float calcularMulta(int diasAtraso);
+void registrarHistorico(HistoricoEmprestimo* historico);
 
 
 

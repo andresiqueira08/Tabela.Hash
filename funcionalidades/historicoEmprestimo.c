@@ -6,16 +6,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-void registrarHistorico(HistoricoEmprestimo* historico) {
-    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\historicoEmprestimo.dat", "ab");
-    if (f==NULL){
-        printf("Erro ao abrir o arquivo de histórico!\n");
-        return;
-    }
-    fwrite(historico, sizeof(HistoricoEmprestimo), 1, f);
-    fclose(f);
-}
-
 void mostrarHistorico() {
     FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\historicoEmprestimo.dat", "rb");
     if (!f) {
@@ -29,7 +19,11 @@ void mostrarHistorico() {
                historico.idUsuario, historico.isbn, historico.dataEmprestimo,
                historico.dataDevolucao, historico.multa);
     }
-
+    if (fread(&historico, sizeof(HistoricoEmprestimo), 1, f)) {
+        printf("Registro encontrado! ID %d, ISBN %s\n", historico.idUsuario, historico.isbn);
+    } else {
+        printf("Nenhum registro encontrado no arquivo.\n");
+}
     fclose(f);
 }
 // cálculo da multa (R$2 por dia de atraso)
@@ -41,6 +35,24 @@ float calcularMulta(int diasAtraso) {
     else {
         return 0.0;
     }
+}
+void registrarHistorico(HistoricoEmprestimo* historico) {
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\historicoEmprestimo.dat", "ab");
+    if (f == NULL) {
+        printf("Erro ao abrir arquivo de histórico!\n");
+        return;
+}
+
+    fwrite(historico, sizeof(HistoricoEmprestimo), 1, f);
+    fclose(f);
+    FILE* log = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\emprestimos.log", "ab");
+    if (!log) {
+        printf("Erro ao abrir o log de empréstimos.\n");
+        return;
+    }
+    fprintf(log, "Usuário ID: %d | ISBN: %s | Empréstimo: %s | Devolução: %s | Multa: R$ %.2f\n",
+            historico->idUsuario, historico->isbn, historico->dataEmprestimo, historico->dataDevolucao, historico->multa);
+    fclose(log);
 }
 void registrarDevolucao(int idUsuario, char* isbn, char* dataEmprestimo, int diasAtraso) {
     HistoricoEmprestimo historico;

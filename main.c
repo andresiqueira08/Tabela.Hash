@@ -10,7 +10,9 @@
 #include "funcionalidades/relatorios.h"
 #include "funcionalidades/interfaceInterativa.h"
 //Adição de tudo que foi trabalhado
+
 int main() {
+    printf("Programa executado");
     iniciarTabelas();  // Inicializa tabelas hash
     carregarLivros();  // Carrega livros do arquivo
     carregarUsuarios(); // Carrega usuários do arquivo
