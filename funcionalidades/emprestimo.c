@@ -5,7 +5,7 @@
 #include "consulta.h"
 #include <time.h>
 
-void atualizarLivroNoArquivo(const char* isbn, int novaQtdeCopias) {
+void atualizarLivroNoArquivo(const char* isbn, Livro* livroAtualizado) {
     FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "r+b");
     if (f == NULL) {
         printf("Erro ao abrir arquivo de livros para atualização.\n");
@@ -15,18 +15,17 @@ void atualizarLivroNoArquivo(const char* isbn, int novaQtdeCopias) {
     Livro livro;
     while (fread(&livro, sizeof(Livro), 1, f)) {
         if (strcmp(livro.isbn, isbn) == 0) {
-            livro.copias = novaQtdeCopias;  // ✅ Atualiza número de cópias
-
-            // ✅ Retorna para posição correta antes de reescrever
+            // Retorna para posição correta antes de reescrever
             fseek(f, -sizeof(Livro), SEEK_CUR);
-            fwrite(&livro, sizeof(Livro), 1, f);
-            printf("Livro atualizado no arquivo! ISBN: %s, Cópias restantes: %d\n", isbn, novaQtdeCopias);
+            fwrite(livroAtualizado, sizeof(Livro), 1, f);
+            printf("Livro atualizado no arquivo! ISBN: %s\n", isbn);
             break;
         }
     }
 
     fclose(f);
 }
+
 
 void realizarEmprestimo(const char* isbn, int id, const char* data){
     Livro* livro = buscarLivroPorISBN(isbn);
@@ -46,7 +45,7 @@ void realizarEmprestimo(const char* isbn, int id, const char* data){
     }
 
     livro->copias--; //Diminuir número de cópias ao emprestar livro
-
+    livro -> emprestimos++;
     // Criar o emprestimo
     Emprestimo emp;
     //Copiar dados isbn, id, data e devolvido para a struct de emprestimo
@@ -73,7 +72,7 @@ void realizarEmprestimo(const char* isbn, int id, const char* data){
     }
     fwrite(&emp, sizeof(Emprestimo), 1, f);
     fclose(f);
-    atualizarLivroNoArquivo(isbn,livro->copias);
+    atualizarLivroNoArquivo(isbn,livro);
 
     printf("Empréstimo realizado!\n");
 

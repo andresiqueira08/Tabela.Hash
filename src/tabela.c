@@ -21,10 +21,10 @@ int hashLivro(const char* isbn) {
 }
 
 int hashUsuario(int id) {
-    return id; //A chave da tabela hash de usuario deve ser o próprio id
+    return id % MAX_TAM; 
 }
 
-Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int ano, int copias){
+Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int ano, int copias, int emprestimos, int ativo){
     Livro* novo = (Livro*)malloc(sizeof(Livro));
     //Definir isbn
     int y = 0;
@@ -52,12 +52,14 @@ Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int a
 
     novo -> ano = ano;
     novo -> copias = copias;
+    novo -> emprestimos = emprestimos;
+    novo ->ativo = ativo;
     novo -> prox = NULL;
     return novo;
 }
 
 
-Usuario* criarUsuario(int id, const char* nome, const char* email, const char* telefone){
+Usuario* criarUsuario(int id, const char* nome, const char* email, const char* telefone, int emprestimos, int ativo){
     Usuario* novo = (Usuario*)malloc(sizeof(Usuario));
     novo -> id = id;
     int index = 0;
@@ -79,6 +81,8 @@ Usuario* criarUsuario(int id, const char* nome, const char* email, const char* t
         a++;
     }
     novo -> email[a] = '\0';
+    novo -> emprestimos = emprestimos;
+    novo -> ativo = ativo;
     novo -> prox = NULL;
     return novo; 
 }

@@ -30,7 +30,7 @@ void exibirMenu() {
 void interfaceInterativa() {
     int opcao;
     char isbn[MAX_STR], titulo[MAX_STR], autor[MAX_STR], nome[MAX_STR], email[MAX_STR], dataEmprestimo[11], telefone[15];
-    int id, ano, copias, diasAtraso;
+    int id, ano, copias, diasAtraso, emprestimos, ativo;
 
     while (1) {
         exibirMenu();
@@ -56,7 +56,9 @@ void interfaceInterativa() {
                 printf("Número de cópias: ");
                 scanf("%d", &copias);
 
-                Livro* novoLivro = criarLivro(isbn, titulo, autor, ano, copias);
+                Livro* novoLivro = criarLivro(isbn, titulo, autor, ano, copias, emprestimos, ativo);
+                novoLivro -> emprestimos = 0;
+                novoLivro -> ativo = 1;
                 inserirLivro(novoLivro);
                 salvarLivro(novoLivro);
                 printf("Livro cadastrado com sucesso!\n");
@@ -79,9 +81,11 @@ void interfaceInterativa() {
                 fgets(telefone, 11, stdin);
                 strtok(telefone, "\n");
 
-                Usuario* novoUsuario = criarUsuario(id, nome, email, telefone);
+                Usuario* novoUsuario = criarUsuario(id, nome, email, telefone, emprestimos, ativo);
+                novoUsuario -> ativo = 1;
+                novoUsuario ->emprestimos = 0;
                 inserirUsuario(novoUsuario);
-                salvarUsuario(novoUsuario);
+                salvarUsuario();
                 printf("Usuário cadastrado com sucesso!\n");
                 break;
 
@@ -171,7 +175,7 @@ void interfaceInterativa() {
                 break;
 
             case 11:
-                exibirHistoricoEmprestimos();
+                mostrarHistorico();
                 break;
 
             case 12:

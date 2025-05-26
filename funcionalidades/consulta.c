@@ -39,9 +39,21 @@ Livro* buscarLivroPorTitulo(const char* titulo){
         }
     }
 }
-Usuario* buscarUsuarioPorID(int id){
-    return tabelaUsuarios[id];
+Usuario* buscarUsuarioPorID(int id) {
+    int h = hashUsuario(id);  // Ou id % MAX_TAM
+    Usuario* atual = tabelaUsuarios[h];
+
+    while (atual != NULL) {
+        if (atual->id == id) {
+            return atual;  // Encontrado
+        }
+        atual = atual->prox;
+    }
+
+    return NULL;  // Não encontrado
 }
+
+
 
 
 

@@ -30,8 +30,8 @@ typedef struct Usuario {
 Livro* tabelaLivros[MAX_TAM]; //Criando Tabela Hash para Livros.
 Usuario* tabelaUsuarios[MAX_TAM]; // Criando Tabela Hash para Usuarios.
 void iniciarTabelas();
-Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int ano, int copias);
-Usuario* criarUsuario(int id, const char* nome, const char* email, const char* telefone);
+Livro* criarLivro(const char* isbn, const char* titulo, const char* autor, int ano, int copias, int emprestimos, int ativo);
+Usuario* criarUsuario(int id, const char* nome, const char* email, const char* telefone, int emprestimos, int ativos);
 int hashLivro(const char* isbn);
 int hashUsuario(int id);
 void inserirLivro(Livro* livro);

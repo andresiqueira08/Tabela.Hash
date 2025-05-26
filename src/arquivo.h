@@ -5,7 +5,7 @@
 void atualizarLivroNaHash(Livro* livro);
 void atualizarUsuarioNaHash(Usuario* usuario);
 void salvarLivro(Livro* livro);
-void salvarUsuario(Usuario* usuario);
+void salvarUsuario();
 void carregarLivros();
 void carregarUsuarios();
 void removerLivroDaHash(const char* isbn);

@@ -12,7 +12,7 @@ typedef struct Emprestimo {
 } Emprestimo;
 
 
-void atualizarLivroNoArquivo(const char* isbn, int novaQtdeCopias);
+void atualizarLivroNoArquivo(const char* isbn, Livro* livroAtualizado);
 void realizarEmprestimo(const char* isbn, int idUsuario, const char* data);
 void registrarLogEmprestimo(Usuario *usuario, Livro *livro);
 

@@ -60,16 +60,23 @@ void salvarLivro(Livro* livro) {
     fclose(f);
 }
 
-void salvarUsuario(Usuario* usuario) {
-    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "ab"); 
-    if (f == NULL) {
-        printf("Erro ao abrir usuarios.dat\n");
+void salvarUsuario() {
+    FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\usuarios.dat", "wb");
+    if (!f) {
+        printf("Erro ao abrir arquivo para salvar usuários.\n");
         return;
     }
 
-    fwrite(usuario, sizeof(Usuario), 1, f);
+    for (int i = 0; i < MAX_TAM; i++) {
+        Usuario* atual = tabelaUsuarios[i];
+        while (atual != NULL) {
+            fwrite(atual, sizeof(Usuario), 1, f);
+            atual = atual->prox;
+        }
+    }
     fclose(f);
 }
+
 // Funções para carregar os dados do arquivo binário de volta para a tabela hash quando o programa inicia.
 void carregarLivros() {
     FILE* f = fopen("C:\\Users\\LORENA\\estrutura.de.dados\\tabelaHash\\dados\\livros.dat", "rb");
@@ -81,7 +88,7 @@ void carregarLivros() {
     Livro livro;
     while (fread(&livro, sizeof(Livro), 1, f)) {
         if (livro.ativo) {  // <- Só carrega se estiver ativo
-            Livro* novoLivro = criarLivro(livro.isbn, livro.titulo, livro.autor, livro.ano, livro.copias);
+            Livro* novoLivro = criarLivro(livro.isbn, livro.titulo, livro.autor, livro.ano, livro.copias, livro.emprestimos, livro.ativo);
             inserirLivro(novoLivro);
         }
     }
@@ -99,7 +106,14 @@ void carregarUsuarios() {
     Usuario usuario;
     while (fread(&usuario, sizeof(Usuario), 1, f)) { 
         if (usuario.ativo) {  
-            Usuario* novoUsuario = criarUsuario(usuario.id, usuario.nome, usuario.email, usuario.telefone);
+            Usuario* novoUsuario = criarUsuario(
+                usuario.id,
+                usuario.nome,
+                usuario.email,
+                usuario.telefone,
+                usuario.emprestimos,
+                usuario.ativo
+            );
             
             if (novoUsuario != NULL) { 
                 inserirUsuario(novoUsuario);
@@ -110,6 +124,7 @@ void carregarUsuarios() {
     }
     fclose(f);
 }
+
 void removerUsuarioDaHash(int id) {
     int chave = hashUsuario(id);
     Usuario* atual = tabelaUsuarios[chave];
